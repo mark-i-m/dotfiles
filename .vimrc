@@ -7,16 +7,21 @@ filetype plugin indent on
 
 " vim-airline
 set timeoutlen=50
-
 set laststatus=2
-
 set t_Co=256
 
 let g:airline_powerline_fonts = 1
-
 let g:airline#extensions#tabline#enabled = 1
-
 let g:airline_theme='murmur'
+
+" autocomplete
+let g:clang_complete_auto = 1
+let g:clang_use_library = 1
+let g:clang_debug = 1
+let g:clang_library_path = '/usr/lib/'
+let g:clang_user_options='|| exit 0'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
+set noshowmode " hide annoying User Defined Completion msg
 
 " normal config stuff follows:
 
