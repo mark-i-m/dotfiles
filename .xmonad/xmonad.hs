@@ -21,7 +21,7 @@ myNormalBorderColor = "#000000"
 
 myConfig = defaultConfig {
     -- automount, desktop background, systray
-    startupHook = execScriptHook "'/home/mark/.xmonad/nautilus_trayer.sh'",
+    startupHook = execScriptHook "'~/.xmonad/nautilus_trayer.sh'",
 
     -- terminal
     terminal = "/usr/bin/gnome-terminal",
