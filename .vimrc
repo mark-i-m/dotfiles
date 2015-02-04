@@ -1,4 +1,4 @@
-" Special Thanks to Pato Lankenau
+" Special Thanks to Pato Lankenau (github:pato)
 
 " Pathogen bundle manager
 execute pathogen#infect()
@@ -15,13 +15,20 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='murmur'
 
 " autocomplete
-let g:clang_complete_auto = 1
-let g:clang_use_library = 1
-let g:clang_debug = 1
-let g:clang_library_path = '/usr/lib/'
-let g:clang_user_options='|| exit 0'
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
-set noshowmode " hide annoying User Defined Completion msg
+" let g:clang_complete_auto = 1
+" let g:clang_use_library = 1
+" let g:clang_debug = 1
+" let g:clang_library_path = '/usr/lib/'
+" let g:clang_user_options='|| exit 0'
+" let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
+" set noshowmode " hide annoying User Defined Completion msg
+" set completeopt-=preview " hide annoying preview window
+" highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
+" highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
+
+" syntastic
+let g:syntastic_java_javac_classpath = "/usr/local/android-sdk-linux/platforms/android-21/*.jar"
+let g:syntastic_java_javac_custom_classpath_command = "ant -q path | grep echo | cut -f2- -d] | tr -d ' ' | tr ':' '\n'"
 
 " normal config stuff follows:
 
