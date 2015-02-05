@@ -7,5 +7,8 @@ xautolock -time 5 -locker "slock" &
 
 wmname xmonad
 
+# systray
+. ~/.xmonad/systray.sh &
+
 # start xmonad
-exec ~/.cabal/bin/xmonad
+exec /usr/bin/xmonad

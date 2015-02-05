@@ -6,14 +6,14 @@
 
 # the default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
-umask 027 
+umask 027
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-    fi  
+	. "$HOME/.bashrc"
+    fi
 fi
 
 # set PATH so it includes user's private bin if it exists
@@ -23,4 +23,4 @@ fi
 
 # start X-server
 alias startx='startx > ~/.xlog 2>&1'
-[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx || $SHELL
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx || $SHELL 

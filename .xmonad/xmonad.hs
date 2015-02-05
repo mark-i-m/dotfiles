@@ -7,13 +7,13 @@ myWorkspaces = map show [1..8] ++ ["email"]
 
 myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     [ ((modm, xK_z), spawn "slock")
-    , ((0    , 0x1008FF11), spawn "amixer set Master 2-")
-    , ((0    , 0x1008FF13), spawn "amixer set Master 2+")
-    , ((0    , 0x1008FF12), spawn "~/.xmonad/volume_mute_toggle.sh")
-    , ((0    , 0x1008FFA9), spawn "touchpad-toggle")
-    , ((0    , 0x1008FF02), spawn "xbacklight +10")
-    , ((0    , 0x1008FF03), spawn "xbacklight -10")
-    , ((modm , xK_q      ), spawn "killall trayer nm-applet ; xmonad --recompile && xmonad --restart")
+    , ((modm, xK_q), spawn "bash ~/.xmonad/restart.sh")
+    , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
+    , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
+    , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
+    , ((0   , 0x1008FFA9), spawn "touchpad-toggle")
+    , ((0   , 0x1008FF02), spawn "xbacklight +10")
+    , ((0   , 0x1008FF03), spawn "xbacklight -10")
     ]
 
 myFocusedBorderColor = "#0080FF"
@@ -21,7 +21,7 @@ myNormalBorderColor = "#000000"
 
 myConfig = defaultConfig {
     -- automount, desktop background, systray
-    startupHook = execScriptHook "'~/.xmonad/nautilus_trayer.sh'",
+    startupHook = execScriptHook "'$HOME/.xmonad/systray.sh'",
 
     -- terminal
     terminal = "/usr/bin/gnome-terminal",
