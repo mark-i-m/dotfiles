@@ -2,6 +2,7 @@
 
 " Pathogen bundle manager
 execute pathogen#infect()
+execute pathogen#helptags()
 
 filetype plugin indent on
 
@@ -14,21 +15,25 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='murmur'
 
-" autocomplete
-" let g:clang_complete_auto = 1
-" let g:clang_use_library = 1
-" let g:clang_debug = 1
-" let g:clang_library_path = '/usr/lib/'
-" let g:clang_user_options='|| exit 0'
-" let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/ycm_extra_conf.py'
-" set noshowmode " hide annoying User Defined Completion msg
-" set completeopt-=preview " hide annoying preview window
-" highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
-" highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
+" Highlight current line
+set cursorline
+hi CursorLine cterm=none guibg=Grey40 ctermbg=233
 
-" syntastic
-let g:syntastic_java_javac_classpath = "/usr/local/android-sdk-linux/platforms/android-21/*.jar"
-let g:syntastic_java_javac_custom_classpath_command = "ant -q path | grep echo | cut -f2- -d] | tr -d ' ' | tr ':' '\n'"
+" tagbar
+let g:tagbar_show_linenumbers=1
+
+" autocomplete
+" YCM
+let g:clang_complete_auto = 1
+let g:clang_use_library = 1
+let g:clang_debug = 1
+let g:clang_library_path = '/usr/lib/'
+let g:clang_user_options='|| exit 0'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
+set noshowmode " hide annoying User Defined Completion msg
+set completeopt-=preview " hide annoying preview window
+highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
+highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
 
 " normal config stuff follows:
 
@@ -53,6 +58,7 @@ map <S-Up> <C-W><Up>
 map <S-Down> <C-W><Down>
 map <S-Left> <C-W><Left>
 map <S-Right> <C-W><Right>
+map <F9> <ESC>:Tagbar<CR>
 
 imap <F5> <ESC>:shell<CR>
 imap <F6> <ESC>:tabe<Space>
@@ -64,6 +70,7 @@ imap <S-Up> <ESC><C-W><Up>
 imap <S-Down> <ESC><C-W><Down>
 imap <S-Left> <ESC><C-W><Left>
 imap <S-Right> <ESC><C-W><Right>
+imap <F9> <ESC>:Tagbar<CR>
 
 " arrow keys move display lines, not physical lines
 noremap  <buffer> <silent> <Up>   gk
