@@ -1,8 +1,6 @@
 config-files
 ============
-Contains various Linux config files
-
-Some are based on other's config files
+Contains various Linux config files, many of which are based on others' config files
 
 Installing
 ----------
@@ -12,7 +10,7 @@ Dependencies
 ------------
 My window manager settup has a lot of dependencies. You probably won't need all of them, unless you are also running on Arch Linux.
 - xmonad, xmobar depend on ghc and the haskell runtime
-- slock, trayer, amixer, nm-applet, and other utilities need to be installed
+- slock, trayer, amixer, nm-applet and other utilities are called in the scripts
 - you may need to edit some of the scripts here to use your own drivers and settings
 
 My vim setup uses several pluggins, which have their own dependencies. See the pluggins' repositories for their own dependencies. Here are is a short summary:
