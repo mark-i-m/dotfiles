@@ -7,12 +7,10 @@ Config { font = "xft:DejaVu Sans Mono:size=9:bold:antialias=true"
        , commands = [
               Run Memory ["-t", "Mem: [<usedratio>%]", "-h", "red", "-H", "90"] 50
             , Run MultiCpu ["-t", "Cpu: [<total>%]", "-h", "red", "-H", "90"] 50
-            , Run Battery ["-t", "Bat: [<leftbar>][<left>%][<timeleft>]", "-l", "red", "-L", "25", "-W", "5", "-b", "-"] 50
             , Run Date "%a %b %_d %Y <fc=#ee9a00>%I:%M:%S</fc>" "date" 10
-            , Run Com "bash" ["-c", "~/.xmonad/volume.sh"] "volume" 50
             , Run StdinReader
           ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %multicpu% %memory%     %volume%     %battery%     <fc=#FFFF00>%date%</fc>  "
+       , template = "%StdinReader% }{ %multicpu% %memory%     <fc=#FFFF00>%date%</fc>  "
        }

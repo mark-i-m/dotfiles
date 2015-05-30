@@ -9,10 +9,6 @@
 # Install all -- overrides the settings below
 INSTALL_ALL=False
 
-# Xorg
-INSTALL_PROFILE=False
-INSTALL_XINITRC=False
-
 # bash
 INSTALL_BASHRC=False
 INSTALL_BASH_ENV_VARS=False
