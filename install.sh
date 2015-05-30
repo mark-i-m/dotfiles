@@ -7,35 +7,35 @@
 ##  - if you choose not to install something, you may need to go back and edit associated files
 
 # Install all -- overrides the settings below
-INSTALL_ALL = False
+INSTALL_ALL=False
 
 # Xorg
-INSTALL_PROFILE = False
-INSTALL_XINITRC = False
+INSTALL_PROFILE=False
+INSTALL_XINITRC=False
 
 # bash
-INSTALL_BASHRC = False
-INSTALL_BASH_ENV_VARS = False
+INSTALL_BASHRC=False
+INSTALL_BASH_ENV_VARS=False
 
 # xmonad
-INSTALL_XMONAD_CONFIG = False
-INSTALL_XMOBARRC = False
+INSTALL_XMONAD_CONFIG=False
+INSTALL_XMOBARRC=False
 
 # vim
-INSTALL_VIMRC = False
+INSTALL_VIMRC=False
 
-INSTALL_PATHOGEN = False
+INSTALL_PATHOGEN=False
 
-INSTALL_RUST_VIM = False
-INSTALL_YCM = False
-INSTALL_SYNTASTIC = False
-INSTALL_TAGBAR = False
-INSTALL_VIM_AIRLINE = False
-INSTALL_VIM_FUGITIVE = False
-INSTALL_VIM_SCALA = False
+INSTALL_RUST_VIM=False
+INSTALL_YCM=False
+INSTALL_SYNTASTIC=False
+INSTALL_TAGBAR=False
+INSTALL_VIM_AIRLINE=False
+INSTALL_VIM_FUGITIVE=False
+INSTALL_VIM_SCALA=False
 
 # where to install
-INSTALL_DIR = ~
+INSTALL_DIR=~
 
 #################################################################################
 ## DO NOT EDIT ANYTHING BELOW THIS LINE!
@@ -43,21 +43,21 @@ INSTALL_DIR = ~
 
 # check to see if we should install everything
 if [ "$INSTALL_ALL" = "True" ]; then
-    INSTALL_PROFILE = True
-    INSTALL_XINITRC = True
-    INSTALL_BASHRC = True
-    INSTALL_BASH_ENV_VARS = True
-    INSTALL_XMONAD_CONFIG = True
-    INSTALL_XMOBARRC = True
-    INSTALL_VIMRC = True
-    INSTALL_PATHOGEN = True
-    INSTALL_RUST_VIM = True
-    INSTALL_YCM = True
-    INSTALL_SYNTASTIC = True
-    INSTALL_TAGBAR = True
-    INSTALL_VIM_AIRLINE = True
-    INSTALL_VIM_FUGITIVE = True
-    INSTALL_VIM_SCALA = True
+    INSTALL_PROFILE=True
+    INSTALL_XINITRC=True
+    INSTALL_BASHRC=True
+    INSTALL_BASH_ENV_VARS=True
+    INSTALL_XMONAD_CONFIG=True
+    INSTALL_XMOBARRC=True
+    INSTALL_VIMRC=True
+    INSTALL_PATHOGEN=True
+    INSTALL_RUST_VIM=True
+    INSTALL_YCM=True
+    INSTALL_SYNTASTIC=True
+    INSTALL_TAGBAR=True
+    INSTALL_VIM_AIRLINE=True
+    INSTALL_VIM_FUGITIVE=True
+    INSTALL_VIM_SCALA=True
 fi
 
 # install xorg stuff
