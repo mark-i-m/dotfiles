@@ -1,5 +1,5 @@
 # install stuff
-sudo apt-get install git build-essential cmake python-dev vim exuberant-ctags xmonad xmobar slock
+sudo apt-get install build-essential cmake python-dev vim exuberant-ctags xmonad xmobar slock
 
 # airline fonts
 git clone https://github.com/powerline/fonts.git
