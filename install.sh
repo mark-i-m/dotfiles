@@ -100,7 +100,7 @@ fi
 
 function install_vim_plugin() {
     mkdir -p $INSTALL_DIR/.vim/bundle
-    ( cd ./vim/.vim/bundle/$1 && git pull )
+    ( cd ./vim/.vim/bundle && git submodule update --init $1 )
     cp -r ./vim/.vim/bundle/$1 $INSTALL_DIR/.vim/bundle/
 }
 
