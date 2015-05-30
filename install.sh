@@ -100,7 +100,7 @@ fi
 
 function install_vim_plugin() {
     mkdir -p $INSTALL_DIR/.vim/bundle
-    ( cd ./vim/.vim/bundle && git submodule update --init $1 )
+    ( cd ./vim/.vim/bundle && git submodule update --init --recursive $1 )
     cp -r ./vim/.vim/bundle/$1 $INSTALL_DIR/.vim/bundle/
 }
 
@@ -130,5 +130,6 @@ fi
 
 if [ "$INSTALL_YCM" = "True" ]; then
     install_vim_plugin "YouCompleteMe"
-    ( cd $INSTALL_DIR/.vim/bundle/YouCompleteMe/ && ./install.sh --clang-completer )
+    ( cd $INSTALL_DIR/.vim/bundle/YouCompleteMe/ \
+        && ./install.sh --clang-completer )
 fi
