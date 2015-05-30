@@ -7,7 +7,7 @@
 ##  - if you choose not to install something, you may need to go back and edit associated files
 
 # Install all -- overrides the settings below
-INSTALL_ALL=False
+INSTALL_ALL=True
 
 # bash
 INSTALL_BASHRC=False

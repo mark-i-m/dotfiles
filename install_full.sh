@@ -4,3 +4,6 @@ sudo apt-get install git build-essential cmake python-dev vim exuberant-ctags xm
 # airline fonts
 git clone https://github.com/powerline/fonts.git
 (cd ./fonts; ./install.sh)
+
+# install config files
+bash install.sh
