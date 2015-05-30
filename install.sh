@@ -50,8 +50,6 @@ function install_vim_plugin() {
 
 # check to see if we should install everything
 if [ "$INSTALL_ALL" = "True" ]; then
-    INSTALL_PROFILE=True
-    INSTALL_XINITRC=True
     INSTALL_BASHRC=True
     INSTALL_BASH_ENV_VARS=True
     INSTALL_BASH_ALIASES=True
@@ -66,15 +64,6 @@ if [ "$INSTALL_ALL" = "True" ]; then
     INSTALL_VIM_AIRLINE=True
     INSTALL_VIM_FUGITIVE=True
     INSTALL_VIM_SCALA=True
-fi
-
-# install xorg stuff
-if [ "$INSTALL_PROFILE" = "True" ]; then
-    install_config_file "./x/.profile"
-fi
-
-if [ "$INSTALL_XINITRC" = "True" ]; then
-    install_config_file "./x/.xinitrc"
 fi
 
 # install bash stuff
