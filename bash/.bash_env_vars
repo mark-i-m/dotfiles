@@ -1,0 +1,14 @@
+export JAVA_HOME="/usr/java/jdk1.7.0_71"
+export CLASSPATH=$CLASSPATH:/usr/java/jdk1.7.0_71/lib
+export PATH=$PATH:$JAVA_HOME/bin
+
+export PYTHON_INCLUDE_DIRS=/usr/include/python2.7
+export PYTHON_LIBRARIES=/usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.so
+
+export EDITOR="vim"
+
+export CUPS_SERVER=localhost:631/version=1.1
+
+export PATH=$PATH:/opt/android-sdk/platform-tools/
+
+export CDPATH=~/:~/Documents
