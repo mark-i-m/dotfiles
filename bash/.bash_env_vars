@@ -7,4 +7,4 @@ export PYTHON_LIBRARIES=/usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.
 
 export EDITOR="vim"
 
-export CDPATH=~/:~/Documents
+export CDPATH=./:~/Documents:~/
