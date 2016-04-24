@@ -13,7 +13,7 @@ set t_Co=256
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='murmur'
+" let g:airline_theme='murmur'
 
 " Highlight current line
 set cursorline
@@ -21,6 +21,21 @@ hi CursorLine cterm=none guibg=Grey40 ctermbg=233
 
 " tagbar
 let g:tagbar_show_linenumbers=1
+
+ let g:tagbar_type_rust = {
+    \ 'ctagstype' : 'rust',
+    \ 'kinds' : [
+        \'T:types',
+        \'f:functions',
+        \'g:enums',
+        \'s:structs',
+        \'m:modules',
+        \'c:constants',
+        \'t:traits',
+        \'i:implementations',
+        \'d:macros'
+    \]
+    \}
 
 " autocomplete
 " YCM
@@ -46,6 +61,7 @@ set shiftwidth=4
 set expandtab                       " expand tabs into 4 spaces
 syntax on
 syntax enable                       " highlight syntax
+set tabpagemax=10000
 
 " useful mappings for for tabs and split screens
 map <F5> <ESC>:shell<CR>
@@ -59,6 +75,7 @@ map <S-Down> <C-W><Down>
 map <S-Left> <C-W><Left>
 map <S-Right> <C-W><Right>
 map <F9> <ESC>:Tagbar<CR>
+map <C-p> <ESC>"+p
 
 imap <F5> <ESC>:shell<CR>
 imap <F6> <ESC>:tabe<Space>
@@ -71,6 +88,7 @@ imap <S-Down> <ESC><C-W><Down>
 imap <S-Left> <ESC><C-W><Left>
 imap <S-Right> <ESC><C-W><Right>
 imap <F9> <ESC>:Tagbar<CR>
+imap <C-p> <ESC>"+p
 
 " arrow keys move display lines, not physical lines
 noremap  <buffer> <silent> <Up>   gk
@@ -86,7 +104,10 @@ cab Wa wa
 cab Qa qa
 cab Xa xa
 cab latex Latex
+cab LAtex Latex
 cab Lat Latex
+cab LAt Latex
+cab lat Latex
 
 ab teh the
 
