@@ -29,7 +29,6 @@ INSTALL_SYNTASTIC=False
 INSTALL_TAGBAR=False
 INSTALL_VIM_AIRLINE=False
 INSTALL_VIM_FUGITIVE=False
-INSTALL_VIM_SCALA=False
 
 # where to install
 INSTALL_DIR=~
@@ -117,10 +116,6 @@ fi
 
 if [ "$INSTALL_VIM_FUGITIVE" = "True" ]; then
     install_vim_plugin "vim-fugitive"
-fi
-
-if [ "$INSTALL_VIM_SCALA" = "True" ]; then
-    install_vim_plugin "vim-scala"
 fi
 
 if [ "$INSTALL_YCM" = "True" ]; then
