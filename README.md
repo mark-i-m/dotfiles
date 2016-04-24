@@ -16,3 +16,5 @@ $ sudo apt-get install git
 $ git clone https://github.com/mark-i-m/dotfilesvm.git && cd dotfilesvm
 $ ./install_full.sh
 ```
+
+If you are on Arch, then you will also need to manually start X. The `x` directory has the appropriate scipts.
