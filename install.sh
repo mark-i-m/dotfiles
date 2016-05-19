@@ -121,6 +121,6 @@ fi
 if [ "$INSTALL_YCM" = "True" ]; then
     install_vim_plugin "YouCompleteMe"
     ( cd $INSTALL_DIR/.vim/bundle/YouCompleteMe/ \
-        && ./install.sh --clang-completer )
+        && ./install.py --clang-completer )
     cp ./vim/global_ycm_extra_conf.py $INSTALL_DIR/.vim/bundle/YouCompleteMe/
 fi
