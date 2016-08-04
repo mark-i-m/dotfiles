@@ -13,11 +13,6 @@ set t_Co=256
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-" let g:airline_theme='murmur'
-
-" Highlight current line
-set cursorline
-hi CursorLine cterm=none guibg=Grey40 ctermbg=233
 
 " tagbar
 let g:tagbar_show_linenumbers=1
@@ -39,6 +34,7 @@ let g:tagbar_show_linenumbers=1
 
 " autocomplete
 " YCM
+let g:ycm_server_python_interpreter = 'python2'
 let g:clang_complete_auto = 1
 let g:clang_use_library = 1
 let g:clang_debug = 1
@@ -47,8 +43,6 @@ let g:clang_user_options='|| exit 0'
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
 set noshowmode " hide annoying User Defined Completion msg
 set completeopt-=preview " hide annoying preview window
-highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
-highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
 
 " normal config stuff follows:
 
@@ -119,3 +113,14 @@ command LatexBibtexDisplay execute "silent !pdflatex % > compile.out && bibtex %
 
 " remove trailing whitespace
 command RemoveTrailingWhitespace %s/\s\+$//
+
+" Change colorscheme ... should always be at the end
+colorscheme desert
+
+set cursorline
+highlight CursorLine cterm=none ctermbg=233
+
+highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
+highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
+highlight Search ctermbg=darkblue ctermfg=yellow cterm=bold
+highlight VertSplit ctermbg=black ctermfg=black
