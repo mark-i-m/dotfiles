@@ -68,6 +68,7 @@ fi
 # install bash stuff
 if [ "$INSTALL_BASHRC" = "True" ]; then
     install_config_file "./bash/.bashrc"
+    install_config_file "./bash/.git_prompt.sh"
 fi
 
 if [ "$INSTALL_BASH_ENV_VARS" = "True" ]; then

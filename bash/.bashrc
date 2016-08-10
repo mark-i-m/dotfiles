@@ -56,13 +56,16 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+. .git_prompt.sh
+
 if [ "$color_prompt" = yes ]; then
     line='\[\033[1;34m\]'
     green='\[\033[1;32m\]'
     bred='\[\033[1;31m\]'
+    yellow='\[\033[1;33m\]'
     white='\[\033[0;37m\]'
-    export PS1=$line'╓\n╠ '$bred'\u@\h'$line' '$green'\w'$line'\n'$line'╚╡\$\[\033[00m\] '
-    export PS2=$line' │\[\033[00m\]  '
+    export PS1="${line}╓\n╠ ${bred}\u@\h${line}${yellow}"'$(__git_ps1 " %s")'" ${line}${green}\w${line}\n${line}╚╡\$\[\033[00m\] "
+    export PS2="${line} │\[\033[00m\]  "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
     alias resetPS1="PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '"
