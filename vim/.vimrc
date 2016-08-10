@@ -58,7 +58,11 @@ syntax enable                       " highlight syntax
 set tabpagemax=10000
 
 " useful mappings for for tabs and split screens
-map <F5> <ESC>:shell<CR>
+if has("nvim")
+  map <F5> <ESC>:tabe\|term<CR>
+else
+  map <F5> <ESC>:shell<CR>
+endif
 map <F6> <ESC>:tabe<Space>
 map <F7> <ESC>:split<Space>
 map <F8> <ESC>:vsplit<Space>
@@ -71,7 +75,11 @@ map <S-Right> <C-W><Right>
 map <F9> <ESC>:Tagbar<CR>
 map <C-p> <ESC>"+p
 
-imap <F5> <ESC>:shell<CR>
+if has("nvim")
+  imap <F5> <ESC>:tabe\|term<CR>
+else
+  imap <F5> <ESC>:shell<CR>
+endif
 imap <F6> <ESC>:tabe<Space>
 imap <F7> <ESC>:split<Space>
 imap <F8> <ESC>:vsplit<Space>
@@ -83,6 +91,17 @@ imap <S-Left> <ESC><C-W><Left>
 imap <S-Right> <ESC><C-W><Right>
 imap <F9> <ESC>:Tagbar<CR>
 imap <C-p> <ESC>"+p
+
+if has("nvim")
+  tnoremap <ESC> <C-\><C-n>
+  tnoremap <F5> <C-\><C-n>:tabe\|term<CR>
+  tnoremap <F6> <C-\><C-n>:tabe<Space>
+  tnoremap <F7> <C-\><C-n>:split<Space>
+  tnoremap <F8> <C-\><C-n>:vsplit<Space>
+  tnoremap <C-Left> <C-\><C-n>:tabp<CR>
+  tnoremap <C-Right> <C-\><C-n>:tabn<CR>
+  tnoremap <C-p> <C-\><C-n>"+p<ESC>i
+endif
 
 " arrow keys move display lines, not physical lines
 noremap  <buffer> <silent> <Up>   gk
