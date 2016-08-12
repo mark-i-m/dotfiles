@@ -56,7 +56,7 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-. .git_prompt.sh
+. ~/.git_prompt.sh
 
 if [ "$color_prompt" = yes ]; then
     line='\[\033[1;34m\]'

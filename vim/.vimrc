@@ -74,6 +74,7 @@ map <S-Left> <C-W><Left>
 map <S-Right> <C-W><Right>
 map <F9> <ESC>:Tagbar<CR>
 map <C-p> <ESC>"+p
+map <C-y> "+y
 
 if has("nvim")
   imap <F5> <ESC>:tabe\|term<CR>
@@ -91,6 +92,7 @@ imap <S-Left> <ESC><C-W><Left>
 imap <S-Right> <ESC><C-W><Right>
 imap <F9> <ESC>:Tagbar<CR>
 imap <C-p> <ESC>"+p
+imap <C-y> "+y
 
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
@@ -101,6 +103,7 @@ if has("nvim")
   tnoremap <C-Left> <C-\><C-n>:tabp<CR>
   tnoremap <C-Right> <C-\><C-n>:tabn<CR>
   tnoremap <C-p> <C-\><C-n>"+p<ESC>i
+  tnoremap <C-y> "+y
 endif
 
 " arrow keys move display lines, not physical lines
