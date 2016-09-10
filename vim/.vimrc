@@ -40,9 +40,13 @@ let g:clang_use_library = 1
 let g:clang_debug = 1
 let g:clang_library_path = '/usr/lib/'
 let g:clang_user_options='|| exit 0'
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '/home/mark/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
+let g:ycm_rust_src_path = '/home/mark/.vim/bundle/YouCompleteMe/rust/src'
 set noshowmode " hide annoying User Defined Completion msg
 set completeopt-=preview " hide annoying preview window
+
+" rust autoformatting
+let g:rustfmt_autosave = 1
 
 " normal config stuff follows:
 
@@ -127,12 +131,6 @@ cab lat Latex
 
 ab teh the
 
-" latex compilation
-command Latex execute "silent !pdflatex % > compile.out &" | redraw!
-command LatexDisplay execute "silent !pdflatex % > compile.out && xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
-command LatexBibtex execute "silent !pdflatex % > compile.out && bibtex %:r.aux >> compile.out && pdflatex % >> compile.out && pdflatex % >> compile.out &" | redraw!
-command LatexBibtexDisplay execute "silent !pdflatex % > compile.out && bibtex %:r.aux >> compile.out && pdflatex % >> compile.out && pdflatex % >> compile.out && xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
-
 " remove trailing whitespace
 command RemoveTrailingWhitespace %s/\s\+$//
 
@@ -146,3 +144,51 @@ highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
 highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
 highlight Search ctermbg=darkblue ctermfg=yellow cterm=bold
 highlight VertSplit ctermbg=black ctermfg=black
+
+" latex compilation
+command LatexClean execute "silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf" | redraw!
+command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
+command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
+
+function LatexCompile()
+    silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+
+    " Also do Bibtex compile if there is a .bib file available
+    if !empty(glob("*.bib"))
+        silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
+        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+    endif
+
+    if filereadable('/tmp/' . expand('%:r') . ".pdf")
+        " If PDF was generated, take it
+        silent !mv /tmp/%:r.pdf .
+    else
+        " Otherwise, report error
+        echo "PDF not producced :("
+        echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+    endif
+endfunction
+
+function LatexClean()
+    " remove artifacts
+    silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf
+endfunction
+
+function LatexDisplay()
+    " Check if there is a PDF
+    if !filereadable(expand('%:r') . ".pdf")
+        call LatexCompile()
+    endif
+
+    " Check if it worked
+    if filereadable(expand('%:r') . ".pdf")
+        silent !xdg-open %:r.pdf > /dev/null 2>&1 &
+    else
+        echoerr "PDF not producced :("
+    endif
+endfunction
+
+" Automatically compile on write
+autocmd BufReadPost *.tex call LatexClean()
+autocmd BufWritePost *.tex call LatexCompile() 
