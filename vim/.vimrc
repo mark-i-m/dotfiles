@@ -151,13 +151,13 @@ command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | red
 command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
 function LatexCompile()
-    silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+    silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
 
     " Also do Bibtex compile if there is a .bib file available
     if !empty(glob("*.bib"))
         silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
-        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
-        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
     endif
 
     if filereadable('/tmp/' . expand('%:r') . ".pdf")
