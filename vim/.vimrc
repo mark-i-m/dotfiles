@@ -79,6 +79,8 @@ map <S-Right> <C-W><Right>
 map <F9> <ESC>:Tagbar<CR>
 map <C-p> <ESC>"+p
 map <C-y> "+y
+map <C-Up> 10<Up>
+map <C-Down> 10<Down>
 
 if has("nvim")
   imap <F5> <ESC>:tabe\|term<CR>
@@ -97,6 +99,8 @@ imap <S-Right> <ESC><C-W><Right>
 imap <F9> <ESC>:Tagbar<CR>
 imap <C-p> <ESC>"+p
 imap <C-y> "+y
+imap <C-Up> 10<Up>
+imap <C-Down> 10<Down>
 
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
@@ -151,13 +155,13 @@ command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | red
 command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
 function LatexCompile()
-    silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
+    silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
 
     " Also do Bibtex compile if there is a .bib file available
     if !empty(glob("*.bib"))
         silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
-        silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
-        silent !pdflatex -halt-on-error -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
     endif
 
     if filereadable('/tmp/' . expand('%:r') . ".pdf")
@@ -165,7 +169,7 @@ function LatexCompile()
         silent !mv /tmp/%:r.pdf .
     else
         " Otherwise, report error
-        echo "PDF not producced :("
+        echo "PDF not produced :("
         echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
     endif
 endfunction
@@ -185,7 +189,7 @@ function LatexDisplay()
     if filereadable(expand('%:r') . ".pdf")
         silent !xdg-open %:r.pdf > /dev/null 2>&1 &
     else
-        echoerr "PDF not producced :("
+        echoerr "PDF not produced :("
     endif
 endfunction
 
