@@ -11,11 +11,14 @@ Config { font = "xft:DejaVu Sans Mono:size=9:bold:antialias=true"
               Run Date "<fc=#FFFF00>%a %b %_d %Y</fc> <fc=#ee9a00>%I:%M:%S</fc>" "date" 10
             , Run Com "bash" ["-c", "~/.xmonad/volume.sh"] "volume" 50
             , Run Com "bash" ["-c", "~/.xmonad/battery.sh"] "bat" 600
-            , Run Com "bash" ["-c", "~/.xmonad/mem.sh"] "mem" 50
+            , Run Memory         [ "--template" ,"Mem: [<usedratio>%]"
+                                         , "--High"     , "90"        -- units: %
+                                         , "--high"     , "darkred"
+                                         ] 10
             , Run Cpu ["-t", "Cpu: [<total>%]"] 50
             , Run StdinReader
           ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu%     %mem%     %volume%     %bat%     %date%  "
+       , template = "%StdinReader% }{ %cpu%     %memory%     %volume%     %bat%     %date%  "
        }

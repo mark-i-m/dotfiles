@@ -6,23 +6,35 @@ import XMonad.Layout.Named
 --import XMonad.Layout.ThreeColumns (ThreeCol(..))
 import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks)
 import XMonad.Util.Run (spawnPipe)
+import qualified XMonad.StackSet as W
+import XMonad.Actions.CycleWS
 
 import Data.Map (union, fromList)
 
 import System.IO (hPutStrLn)
 
-myWorkspaces = map show [1..7] ++ ["N", "E"]
+myWorkspaces = map show [1..9] ++ (map snd myExtraWorkspaces)
+
+myExtraWorkspaces = [(xK_0, "E"), (xK_minus, "_")]
 
 myKeys conf@(XConfig {modMask = modm}) = fromList $
     [ ((modm, xK_z), spawn "slock")
     , ((modm, xK_q), spawn "bash ~/.xmonad/restart.sh")
+    , ((modm, xK_Right), nextWS)
+    , ((modm, xK_Left), prevWS)
+    , ((modm .|. shiftMask, xK_Right), shiftToNext >> nextWS)
+    , ((modm .|. shiftMask, xK_Left), shiftToPrev >> prevWS)
+    , ((modm, xK_f), moveTo Next EmptyWS)
+    , ((modm .|. shiftMask, xK_f), shiftTo Next EmptyWS)
     , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
     , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
     , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
     , ((0   , 0x1008FFA9), spawn "touchpad-toggle")
     , ((0   , 0x1008FF02), spawn "xbacklight +10")
     , ((0   , 0x1008FF03), spawn "xbacklight -10")
-    ]
+    ] 
+    ++ [((modm, key), (windows $ W.greedyView ws)) | (key, ws) <- myExtraWorkspaces]
+    ++ [((modm .|. shiftMask, key), (windows $ W.shift ws)) | (key, ws) <- myExtraWorkspaces]
 
 myFocusedBorderColor = "#0080FF"
 myNormalBorderColor = "#000000"
@@ -40,13 +52,13 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
   , ppHidden  = hiddenStyle
   , ppHiddenNoWindows = hiddenNoWinStyle
   , ppTitle   = titleStyle
-  , ppLayout  = (\layout -> case layout of
-      "Tall"        -> "Tall  "
-      "Mirror Tall" -> "Wide  "
-      "LaTeX" -> "LaTeX "
+  , ppLayout  =  (xmobarColor "#404040" "#202020") . (wrap "[" "]") . (\layout -> case layout of
+      "Tall"        -> "|"
+      "Mirror Tall" -> "-"
+      "LaTeX" -> "L"
       -- "ThreeCol"    -> "3Col"
       -- "Mirror ThreeCol" -> "Mirror 3Col"
-      "Full"        -> "Full  "
+      "Full"        -> "#"
       )
   }
   where
@@ -54,7 +66,7 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
     visibleStyle = xmobarColor "#717700" ""
     hiddenStyle  = xmobarColor "grey" ""
     hiddenNoWinStyle  = xmobarColor "#202020" ""
-    titleStyle   = xmobarColor "green" "" . shorten 130 . filterCurly
+    titleStyle   = xmobarColor "#008000" "" . shorten 130 . filterCurly
     filterCurly  = filter (not . isCurly)
     isCurly x    = x == '{' || x == '}'
 
