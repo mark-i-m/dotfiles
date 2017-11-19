@@ -41,7 +41,7 @@ let g:clang_debug = 1
 let g:clang_library_path = '/usr/lib/'
 let g:clang_user_options='|| exit 0'
 let g:ycm_global_ycm_extra_conf = '/home/mark/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
-let g:ycm_rust_src_path = '/home/mark/.vim/bundle/YouCompleteMe/rust/src'
+let g:ycm_rust_src_path = '/home/mark/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
 set noshowmode " hide annoying User Defined Completion msg
 set completeopt-=preview " hide annoying preview window
 
@@ -60,6 +60,7 @@ set expandtab                       " expand tabs into 4 spaces
 syntax on
 syntax enable                       " highlight syntax
 set tabpagemax=10000
+set nowrap
 
 " useful mappings for for tabs and split screens
 if has("nvim")
@@ -81,6 +82,7 @@ map <C-p> <ESC>"+p
 map <C-y> "+y
 map <C-Up> 10<Up>
 map <C-Down> 10<Down>
+map <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
   imap <F5> <ESC>:tabe\|term<CR>
@@ -101,6 +103,7 @@ imap <C-p> <ESC>"+p
 imap <C-y> "+y
 imap <C-Up> 10<Up>
 imap <C-Down> 10<Down>
+map <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
@@ -155,13 +158,13 @@ command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | red
 command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
 function LatexCompile()
-    silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+    silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
 
     " Also do Bibtex compile if there is a .bib file available
     if !empty(glob("*.bib"))
         silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
-        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
-        silent !pdflatex -output-directory /tmp/ % > "/tmp/%.compile.out" 
+        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
+        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
     endif
 
     if filereadable('/tmp/' . expand('%:r') . ".pdf")
@@ -195,4 +198,4 @@ endfunction
 
 " Automatically compile on write
 autocmd BufReadPost *.tex call LatexClean()
-autocmd BufWritePost *.tex call LatexCompile() 
+autocmd BufWritePost *.tex call LatexCompile()

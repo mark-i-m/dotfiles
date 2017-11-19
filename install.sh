@@ -29,6 +29,7 @@ INSTALL_SYNTASTIC=False
 INSTALL_TAGBAR=False
 INSTALL_VIM_AIRLINE=False
 INSTALL_VIM_FUGITIVE=False
+INSTALL_NERD_TREE=False
 
 # where to install
 INSTALL_DIR=~
@@ -63,6 +64,7 @@ if [ "$INSTALL_ALL" = "True" ]; then
     INSTALL_VIM_AIRLINE=True
     INSTALL_VIM_FUGITIVE=True
     INSTALL_VIM_SCALA=True
+    INSTALL_NERD_TREE=True
 fi
 
 # install bash stuff
@@ -117,6 +119,10 @@ fi
 
 if [ "$INSTALL_VIM_FUGITIVE" = "True" ]; then
     install_vim_plugin "vim-fugitive"
+fi
+
+if [ "$INSTALL_NERD_TREE" = "True" ]; then
+    install_vim_plugin "nerdtree"
 fi
 
 if [ "$INSTALL_YCM" = "True" ]; then
