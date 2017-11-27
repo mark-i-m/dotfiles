@@ -1,10 +1,31 @@
-" Special Thanks to Pato Lankenau (github:pato)
 
-" Pathogen bundle manager
-execute pathogen#infect()
-execute pathogen#helptags()
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
-filetype plugin indent on
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'scrooloose/nerdtree'
+
+Plugin 'rust-lang/rust.vim'
+
+Plugin 'vim-syntastic/syntastic'
+
+Plugin 'majutsushi/tagbar'
+
+Plugin 'vim-airline/vim-airline'
+
+Plugin 'Valloric/YouCompleteMe'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 " vim-airline
 set timeoutlen=50
@@ -15,34 +36,18 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " tagbar
-let g:tagbar_show_linenumbers=1
-
- let g:tagbar_type_rust = {
-    \ 'ctagstype' : 'rust',
-    \ 'kinds' : [
-        \'T:types',
-        \'f:functions',
-        \'g:enums',
-        \'s:structs',
-        \'m:modules',
-        \'c:constants',
-        \'t:traits',
-        \'i:implementations',
-        \'d:macros'
-    \]
-    \}
+" let g:tagbar_show_linenumbers=1
 
 " autocomplete
 " YCM
 let g:ycm_server_python_interpreter = 'python2'
-let g:clang_complete_auto = 1
-let g:clang_use_library = 1
-let g:clang_debug = 1
-let g:clang_library_path = '/usr/lib/'
-let g:clang_user_options='|| exit 0'
-let g:ycm_global_ycm_extra_conf = '/home/mark/.vim/bundle/YouCompleteMe/global_ycm_extra_conf.py'
-let g:ycm_rust_src_path = '/home/mark/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
-set noshowmode " hide annoying User Defined Completion msg
+" let g:clang_complete_auto = 1
+" let g:clang_use_library = 1
+" let g:clang_debug = 1
+" let g:clang_library_path = '/usr/lib/'
+" let g:clang_user_options='|| exit 0'
+let g:ycm_global_ycm_extra_conf = $HOME . '/.vim/bundle/global_ycm_extra_conf.py'
+" set noshowmode " hide annoying User Defined Completion msg
 set completeopt-=preview " hide annoying preview window
 
 " rust autoformatting
@@ -63,6 +68,7 @@ set tabpagemax=10000
 set nowrap
 
 " useful mappings for for tabs and split screens
+map <F4> <ESC>:YcmCompleter GoTo<CR>
 if has("nvim")
   map <F5> <ESC>:tabe\|term<CR>
 else
@@ -84,6 +90,7 @@ map <C-Up> 10<Up>
 map <C-Down> 10<Down>
 map <F10> <ESC>:NERDTreeToggle<CR>
 
+imap <F4> <ESC>:YcmCompleter GoTo<CR>
 if has("nvim")
   imap <F5> <ESC>:tabe\|term<CR>
 else
@@ -103,7 +110,7 @@ imap <C-p> <ESC>"+p
 imap <C-y> "+y
 imap <C-Up> 10<Up>
 imap <C-Down> 10<Down>
-map <F10> <ESC>:NERDTreeToggle<CR>
+imap <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>

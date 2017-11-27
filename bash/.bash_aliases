@@ -8,4 +8,4 @@ alias ....="cd ../.."
 alias .....="cd ../../.."
 alias cd..="cd .."
 
-alias cdjnk="cd ~/Downloads/junk"
+alias cdjnk="cd /tmp"
