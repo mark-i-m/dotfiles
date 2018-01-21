@@ -1,21 +1,22 @@
 import XMonad
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, xmobarPP, ppOutput, ppCurrent, ppVisible, ppHidden, ppHiddenNoWindows, ppTitle, ppLayout, ppSep, ppOrder, xmobarColor, wrap, shorten, xmobar)
+import XMonad.Hooks.DynamicLog (dynamicLogWithPP, xmobarPP, ppOutput, ppCurrent, ppVisible, ppHidden, ppHiddenNoWindows, ppTitle, ppLayout, ppSep, ppOrder, ppExtras, xmobarColor, wrap, shorten, xmobar)
 import XMonad.Actions.SpawnOn
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Named
+import XMonad.Layout.Groups (group)
+import XMonad.Layout.Groups.Helpers
 --import XMonad.Layout.ThreeColumns (ThreeCol(..))
 import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks)
 import XMonad.Util.Run (spawnPipe)
 import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
+import XMonad.Actions.Submap
 
 import Data.Map (union, fromList)
 
 import System.IO (hPutStrLn)
 
-myWorkspaces = map show [1..9] ++ (map snd myExtraWorkspaces)
-
-myExtraWorkspaces = [(xK_0, "E"), (xK_minus, "_")]
+myWorkspaces = map show [1..9]
 
 myKeys conf@(XConfig {modMask = modm}) = fromList $
     [ ((modm, xK_z), spawn "slock")
@@ -26,15 +27,20 @@ myKeys conf@(XConfig {modMask = modm}) = fromList $
     , ((modm .|. shiftMask, xK_Left), shiftToPrev >> prevWS)
     , ((modm, xK_f), moveTo Next EmptyWS)
     , ((modm .|. shiftMask, xK_f), shiftTo Next EmptyWS)
+    , ((modm, xK_Tab), focusDown)
+    , ((modm .|. shiftMask, xK_Tab), focusUp)
+    , ((modm, xK_grave), submap . fromList $
+        [ ((modm, xK_grave), focusGroupDown)
+        , ((modm, xK_Down), moveToGroupDown False)
+        , ((modm, xK_Up), moveToGroupUp False)
+        ])
     , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
     , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
     , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
     , ((0   , 0x1008FFA9), spawn "touchpad-toggle")
     , ((0   , 0x1008FF02), spawn "xbacklight +10")
     , ((0   , 0x1008FF03), spawn "xbacklight -10")
-    ] 
-    ++ [((modm, key), (windows $ W.greedyView ws)) | (key, ws) <- myExtraWorkspaces]
-    ++ [((modm .|. shiftMask, key), (windows $ W.shift ws)) | (key, ws) <- myExtraWorkspaces]
+    ]
 
 myFocusedBorderColor = "#0080FF"
 myNormalBorderColor = "#000000"
@@ -46,20 +52,24 @@ myStartupHook = do
 myLogHook proc = dynamicLogWithPP $ xmobarPP
   { ppOutput  = hPutStrLn proc
   , ppSep     = " "
-  , ppOrder   = (\(ws:l:t:_) -> [l, ws,t])
+  , ppOrder   = (\(ws:l:t:e:_) -> [l ++ e, ws, t])
   , ppCurrent = currentStyle
   , ppVisible = visibleStyle
   , ppHidden  = hiddenStyle
   , ppHiddenNoWindows = hiddenNoWinStyle
   , ppTitle   = titleStyle
-  , ppLayout  =  (xmobarColor "#404040" "#202020") . (wrap "[" "]") . (\layout -> case layout of
-      "Tall"        -> "|"
-      "Mirror Tall" -> "-"
-      "LaTeX" -> "L"
-      -- "ThreeCol"    -> "3Col"
-      -- "Mirror ThreeCol" -> "Mirror 3Col"
-      "Full"        -> "#"
-      )
+  , ppLayout  =  (xmobarColor "#404040" "#202020") . 
+                 (wrap "[" "") . 
+                 (\layout -> case dropByFull layout of
+                  "Tall"        -> "|"
+                  "Mirror Tall" -> "-"
+                  "LaTeX"       -> "L"
+                  -- "ThreeCol"    -> "3Col"
+                  -- "Mirror ThreeCol" -> "Mirror 3Col"
+                  "Full"        -> "#"
+                  x -> "Error parsing (see xmonad.hs): " ++ x
+                  ) 
+  , ppExtras  = [logTitles]
   }
   where
     currentStyle = xmobarColor "yellow" ""
@@ -69,10 +79,18 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
     titleStyle   = xmobarColor "#008000" "" . shorten 130 . filterCurly
     filterCurly  = filter (not . isCurly)
     isCurly x    = x == '{' || x == '}'
-
-myLayoutHook = avoidStruts $ smartBorders $ 
+    dropByFull   = reverse . (drop 8) . reverse -- drop the chars " by Full"
+    logTitles    = do
+        winset <- gets windowset
+        let numWins = length $ W.index winset
+        let colored = xmobarColor "#7a0000" "#202020" $ show numWins
+        let sep = xmobarColor "#404040" "#202020" "]"
+        return $ if numWins > 1 then Just $ colored ++ sep else Nothing
+        
+myLayoutHook = avoidStruts $ smartBorders $
   -- (tiled ||| Mirror tiled ||| threeCol ||| Mirror threeCol ||| Full)
-  (tiled ||| Mirror tiled ||| latexTiled ||| Full)
+  -- (tiled ||| Mirror tiled ||| latexTiled ||| Full)
+  group (tiled ||| Mirror tiled ||| latexTiled ||| Full) Full
   where
     tiled      = Tall nmaster delta ratio
     latexTiled = named "LaTeX" (Tall nmaster delta latexRatio)
