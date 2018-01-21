@@ -83,9 +83,9 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
     logTitles    = do
         winset <- gets windowset
         let numWins = length $ W.index winset
-        let colored = xmobarColor "#7a0000" "#202020" $ show numWins
+        let color = xmobarColor "#7a0000" "#202020"
         let sep = xmobarColor "#404040" "#202020" "]"
-        return $ if numWins > 1 then Just $ colored ++ sep else Nothing
+        return $ Just $ color $ show numWins ++ sep 
         
 myLayoutHook = avoidStruts $ smartBorders $
   -- (tiled ||| Mirror tiled ||| threeCol ||| Mirror threeCol ||| Full)
