@@ -6,7 +6,7 @@ git clone https://github.com/powerline/fonts.git
 (cd ./fonts; ./install.sh)
 
 # install rust
-curl -sSf https://sh.rustup.rs | sh -s -- --channel=stable
+curl -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 
 # install config files
 bash install.sh
