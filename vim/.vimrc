@@ -67,6 +67,7 @@ syntax enable                       " highlight syntax
 set tabpagemax=10000
 set nowrap
 set ai                              " autoindent
+set incsearch                        " highlight search results
 
 " useful mappings for for tabs and split screens
 map <F4> <ESC>:YcmCompleter GoTo<CR>
