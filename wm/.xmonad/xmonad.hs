@@ -7,7 +7,7 @@ import XMonad.Layout.Groups (group)
 import XMonad.Layout.Groups.Helpers (focusUp, focusDown, swapUp, swapDown, swapMaster, moveToGroupUp, moveToGroupDown, focusGroupDown)
 --import XMonad.Layout.ThreeColumns (ThreeCol(..))
 import XMonad.Operations (refresh)
-import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks)
+import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docks)
 import XMonad.Util.Run (spawnPipe)
 import qualified XMonad.StackSet as W
 import XMonad.Actions.CycleWS
@@ -22,7 +22,7 @@ myWorkspaces = map show [1..9]
 myKeys conf@(XConfig {modMask = modm}) = fromList $
     [ ((modm, xK_z), spawn "slock")
     , ((modm, xK_q), spawn "bash ~/.xmonad/restart.sh")
-    
+
     -- keybindings for workspaces
     , ((modm, xK_Right), nextWS)
     , ((modm, xK_Left), prevWS)
@@ -44,7 +44,7 @@ myKeys conf@(XConfig {modMask = modm}) = fromList $
         , ((modm, xK_Down), moveToGroupDown False)
         , ((modm, xK_Up), moveToGroupUp False)
         ])
-    
+
     , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
     , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
     , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
@@ -69,8 +69,8 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
   , ppHidden  = hiddenStyle
   , ppHiddenNoWindows = hiddenNoWinStyle
   , ppTitle   = titleStyle
-  , ppLayout  =  (xmobarColor "#404040" "#202020") . 
-                 (wrap "[" "") . 
+  , ppLayout  =  (xmobarColor "#404040" "#202020") .
+                 (wrap "[" "") .
                  (\layout -> case dropByFull layout of
                   "Tall"        -> "|"
                   "Mirror Tall" -> "-"
@@ -79,7 +79,7 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
                   -- "Mirror ThreeCol" -> "Mirror 3Col"
                   "Full"        -> "#"
                   x -> "Error parsing (see xmonad.hs): " ++ x
-                  ) 
+                  )
   , ppExtras  = [logTitles]
   }
   where
@@ -96,8 +96,8 @@ myLogHook proc = dynamicLogWithPP $ xmobarPP
         let numWins = length $ W.index winset
         let color = xmobarColor "#7a0000" "#202020"
         let sep = xmobarColor "#404040" "#202020" "]"
-        return $ Just $ color $ show numWins ++ sep 
-        
+        return $ Just $ color $ show numWins ++ sep
+
 myLayoutHook = avoidStruts $ smartBorders $
   -- (tiled ||| Mirror tiled ||| threeCol ||| Mirror threeCol ||| Full)
   -- (tiled ||| Mirror tiled ||| latexTiled ||| Full)
@@ -127,8 +127,8 @@ myConfig logHandle = defaultConfig {
 
     -- xmobar
     logHook      = myLogHook logHandle,
+    manageHook   = manageDocks <+> manageHook defaultConfig,
     layoutHook   = myLayoutHook,
-    manageHook   = manageDocks,
 
     -- window border color
     focusedBorderColor = myFocusedBorderColor,
@@ -137,4 +137,4 @@ myConfig logHandle = defaultConfig {
 
 main = do
     xmobar <- spawnPipe "xmobar"
-    xmonad $ myConfig xmobar
+    xmonad $ docks $ myConfig xmobar
