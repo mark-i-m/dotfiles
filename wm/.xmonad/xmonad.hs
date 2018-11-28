@@ -4,7 +4,7 @@ import XMonad.Actions.SpawnOn
 import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Layout.Named
 import XMonad.Layout.Groups (group)
-import XMonad.Layout.Groups.Helpers (focusUp, focusDown, swapUp, swapDown, swapMaster, moveToGroupUp, moveToGroupDown, focusGroupDown)
+import XMonad.Layout.Groups.Helpers (focusUp, focusDown, swapUp, swapDown, swapMaster, moveToGroupUp, moveToGroupDown, focusGroupDown, focusGroupUp)
 --import XMonad.Layout.ThreeColumns (ThreeCol(..))
 import XMonad.Operations (refresh)
 import XMonad.Hooks.ManageDocks (avoidStruts, manageDocks, docks)
@@ -21,11 +21,11 @@ myWorkspaces = map show [1..9]
 
 myKeys conf@(XConfig {modMask = modm}) = fromList $
     [ ((modm, xK_z), spawn "slock")
-    , ((modm, xK_q), spawn "bash ~/.xmonad/restart.sh")
-
     -- keybindings for workspaces
-    , ((modm, xK_Right), nextWS)
-    , ((modm, xK_Left), prevWS)
+    , ((modm, xK_a), toggleWS)
+    , ((modm, xK_s), swapNextScreen >> nextScreen)
+    , ((modm, xK_Right), moveTo Next HiddenWS)
+    , ((modm, xK_Left), moveTo Prev HiddenWS)
     , ((modm .|. shiftMask, xK_Right), shiftToNext >> nextWS)
     , ((modm .|. shiftMask, xK_Left), shiftToPrev >> prevWS)
     , ((modm, xK_f), moveTo Next EmptyWS)
@@ -44,7 +44,9 @@ myKeys conf@(XConfig {modMask = modm}) = fromList $
         , ((modm, xK_Down), moveToGroupDown False)
         , ((modm, xK_Up), moveToGroupUp False)
         ])
-
+    , ((modm .|. shiftMask, xK_grave), submap . fromList $
+        [ ((modm .|. shiftMask, xK_grave), focusGroupUp)
+        ])
     , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
     , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
     , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
@@ -54,7 +56,7 @@ myKeys conf@(XConfig {modMask = modm}) = fromList $
     ]
 
 myFocusedBorderColor = "#0080FF"
-myNormalBorderColor = "#000000"
+myNormalBorderColor = "#753200"
 
 myStartupHook :: X ()
 myStartupHook = do

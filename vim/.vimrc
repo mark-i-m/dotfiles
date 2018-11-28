@@ -167,22 +167,37 @@ command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | red
 command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
 function LatexCompile()
-    silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
+    " If there is a makefile, do that... otherwise, do the normal thing.
+    if filereadable('Makefile') || filereadable('makefile')
+        silent !make > "/tmp/%.compile.out"
 
-    " Also do Bibtex compile if there is a .bib file available
-    if !empty(glob("*.bib"))
-        silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
-        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
-        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
-    endif
-
-    if filereadable('/tmp/' . expand('%:r') . ".pdf")
-        " If PDF was generated, take it
-        silent !mv /tmp/%:r.pdf .
+        if empty(glob("./*.pdf"))
+            " No PDF produced
+            echo "PDF not produced :("
+            echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+        endif
     else
-        " Otherwise, report error
-        echo "PDF not produced :("
-        echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
+
+        " Also do Bibtex compile if there is a .bib file available
+        " if !empty(glob("*.bib"))
+        "     silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
+        "     silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
+        "     silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
+        " endif
+        if !empty(glob("*.bib"))
+            silent !cp *.bib /tmp/ >> /tmp/%.compile.out
+            silent !cd /tmp/ && bibtex %:r.aux >> /tmp/%.compile.out
+        endif
+
+        if filereadable('/tmp/' . expand('%:r') . ".pdf")
+            " If PDF was generated, take it
+            silent !mv /tmp/%:r.pdf .
+        else
+            " Otherwise, report error
+            echo "PDF not produced :("
+            echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+        endif
     endif
 endfunction
 
