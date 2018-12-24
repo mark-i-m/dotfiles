@@ -62,7 +62,6 @@ set ai                              " autoindent
 set incsearch                        " highlight search results
 
 " useful mappings for for tabs and split screens
-map <F4> <ESC>:YcmCompleter GoTo<CR>
 if has("nvim")
   map <F5> <ESC>:tabe\|term<CR>
 else
@@ -85,7 +84,6 @@ map <C-Up> 10<Up>
 map <C-Down> 10<Down>
 map <F10> <ESC>:NERDTreeToggle<CR>
 
-imap <F4> <ESC>:YcmCompleter GoTo<CR>
 if has("nvim")
   imap <F5> <ESC>:tabe\|term<CR>
 else
