@@ -5,8 +5,6 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
@@ -21,7 +19,7 @@ Plugin 'majutsushi/tagbar'
 
 Plugin 'vim-airline/vim-airline'
 
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'maralla/completor.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -35,20 +33,14 @@ set t_Co=256
 let g:airline_powerline_fonts = 0
 let g:airline#extensions#tabline#enabled = 1
 
-" tagbar
-" let g:tagbar_show_linenumbers=1
+" completor.vim
+let g:completor_python_binary = '/usr/bin/python3'
+let g:completor_racer_binary = '/nobackup/.cargo/bin/racer'
+let g:completor_clang_binary = '/s/std/bin/clang'
 
-" autocomplete
-" YCM
-let g:ycm_server_python_interpreter = 'python2'
-" let g:clang_complete_auto = 1
-" let g:clang_use_library = 1
-" let g:clang_debug = 1
-" let g:clang_library_path = '/usr/lib/'
-" let g:clang_user_options='|| exit 0'
-let g:ycm_global_ycm_extra_conf = $HOME . '/.vim/bundle/global_ycm_extra_conf.py'
-" set noshowmode " hide annoying User Defined Completion msg
-set completeopt-=preview " hide annoying preview window
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
 " rust autoformatting
 let g:rustfmt_autosave = 1
@@ -58,7 +50,7 @@ let g:rustfmt_autosave = 1
 set nu                              " number lines
 set splitright                      " when the split and split commands are used split to the right or below
 set splitbelow
-" set mouse=a                       " allow mouse navigation -- can get annoying with trackpads
+" set mouse=a                         " allow mouse navigation -- can get annoying with trackpads
 set tabstop=4                       " size of a tab
 set shiftwidth=4
 set expandtab                       " expand tabs into 4 spaces
@@ -76,7 +68,8 @@ if has("nvim")
 else
   map <F5> <ESC>:shell<CR>
 endif
-map <F6> <ESC>:tabe<Space>
+" map <F6> <ESC>:tabe<Space>
+map <F6> <ESC>:Tabedit<Space>
 map <F7> <ESC>:split<Space>
 map <F8> <ESC>:vsplit<Space>
 map <C-Left> <ESC>:tabp<CR>
@@ -98,7 +91,8 @@ if has("nvim")
 else
   imap <F5> <ESC>:shell<CR>
 endif
-imap <F6> <ESC>:tabe<Space>
+" imap <F6> <ESC>:tabe<Space>
+imap <F6> <ESC>:Tabedit<Space>
 imap <F7> <ESC>:split<Space>
 imap <F8> <ESC>:vsplit<Space>
 imap <C-Left> <ESC>:tabp<CR>
@@ -117,7 +111,8 @@ imap <F10> <ESC>:NERDTreeToggle<CR>
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
   tnoremap <F5> <C-\><C-n>:tabe\|term<CR>
-  tnoremap <F6> <C-\><C-n>:tabe<Space>
+  " tnoremap <F6> <C-\><C-n>:tabe<Space>
+  tnoremap <F6> <C-\><C-n>:Tabedit<Space>
   tnoremap <F7> <C-\><C-n>:split<Space>
   tnoremap <F8> <C-\><C-n>:vsplit<Space>
   tnoremap <C-Left> <C-\><C-n>:tabp<CR>
@@ -126,11 +121,27 @@ if has("nvim")
   tnoremap <C-y> "+y
 endif
 
+command! -nargs=* -complete=file Tabedit call Tabedit(<f-args>)
+
+function! Tabedit(...)
+    if a:0 == 0
+        tab split
+    else
+        for fname in a:000
+            execute "tabe " . fname
+        endfor
+    endif
+endfunction
+
 " arrow keys move display lines, not physical lines
 noremap  <buffer> <silent> <Up>   gk
 noremap  <buffer> <silent> <Down> gj
 inoremap <buffer> <silent> <Up>   <C-o>gk
 inoremap <buffer> <silent> <Down> <C-o>gj
+
+" Cite as you write
+noremap <F3> a<C-r>=ZoteroCite()<CR><ESC>
+inoremap <F3> <C-r>=ZoteroCite()<CR>
 
 " useful aliases
 cab W w
@@ -148,7 +159,7 @@ cab lat Latex
 ab teh the
 
 " remove trailing whitespace
-command RemoveTrailingWhitespace %s/\s\+$//
+command! RemoveTrailingWhitespace %s/\s\+$//
 
 " Change colorscheme ... should always be at the end
 colorscheme desert
@@ -162,11 +173,11 @@ highlight Search ctermbg=darkblue ctermfg=yellow cterm=bold
 highlight VertSplit ctermbg=black ctermfg=black
 
 " latex compilation
-command LatexClean execute "silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf" | redraw!
-command LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
-command LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
+command! LatexClean execute "silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf" | redraw!
+command! LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
+command! LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
-function LatexCompile()
+function! LatexCompile()
     " If there is a makefile, do that... otherwise, do the normal thing.
     if filereadable('Makefile') || filereadable('makefile')
         silent !make > "/tmp/%.compile.out"
@@ -180,11 +191,6 @@ function LatexCompile()
         silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
 
         " Also do Bibtex compile if there is a .bib file available
-        " if !empty(glob("*.bib"))
-        "     silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out
-        "     silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
-        "     silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
-        " endif
         if !empty(glob("*.bib"))
             silent !cp *.bib /tmp/ >> /tmp/%.compile.out
             silent !cd /tmp/ && bibtex %:r.aux >> /tmp/%.compile.out
@@ -201,12 +207,12 @@ function LatexCompile()
     endif
 endfunction
 
-function LatexClean()
+function! LatexClean()
     " remove artifacts
     silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf
 endfunction
 
-function LatexDisplay()
+function! LatexDisplay()
     " Check if there is a PDF
     if !filereadable(expand('%:r') . ".pdf")
         call LatexCompile()
@@ -218,6 +224,13 @@ function LatexDisplay()
     else
         echoerr "PDF not produced :("
     endif
+endfunction
+
+function! ZoteroCite()
+  let format = 'cite'
+  let api_call = 'http://localhost:23119/better-bibtex/cayw?format='.format.'&brackets=1'
+  let ref = system('curl -s '.shellescape(api_call))
+  return ref
 endfunction
 
 " Automatically compile on write
