@@ -69,9 +69,3 @@ if [ "$INSTALL_VUNDLE" = "True" ]; then
         git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && \
         vim +PluginInstall +qall
 fi
-
-if [ "$INSTALL_YCM" = "True" ]; then
-    ( cd $INSTALL_DIR/.vim/bundle/YouCompleteMe/ && \
-        ./install.py --clang-completer --rust-completer ) && \
-        cp ./vim/global_ycm_extra_conf.py $INSTALL_DIR/.vim/bundle/
-fi
