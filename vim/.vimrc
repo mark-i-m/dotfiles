@@ -13,13 +13,16 @@ Plugin 'scrooloose/nerdtree'
 
 Plugin 'rust-lang/rust.vim'
 
-Plugin 'vim-syntastic/syntastic'
-
 Plugin 'majutsushi/tagbar'
 
 Plugin 'vim-airline/vim-airline'
 
-Plugin 'maralla/completor.vim'
+Plugin 'neoclide/coc.nvim' " also remember to check out release branch
+
+Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install' }
+Plugin 'junegunn/fzf.vim'
+
+Plugin 'neomake/neomake'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -31,19 +34,84 @@ set laststatus=2
 set t_Co=256
 
 let g:airline_powerline_fonts = 0
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
 
-" completor.vim
-let g:completor_python_binary = '/usr/bin/python3'
-let g:completor_racer_binary = '/nobackup/.cargo/bin/racer'
-let g:completor_clang_binary = '/s/std/bin/clang'
+" coc.vim
+set hidden
+set updatetime=300
+set shortmess+=c
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+autocmd CursorHold * silent call CocActionAsync('highlight')
+nmap F <Plug>(coc-rename)
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+
+" fzf
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+let g:fzf_action = { 'enter': 'tab split' }
 
 " rust autoformatting
 let g:rustfmt_autosave = 1
+
+" neomake, autorun on buffer write
+call neomake#configure#automake('rw')
+
+" use universal-ctags for Rust tagbar
+let g:rust_use_custom_ctags_defs = 1
+let g:tagbar_type_rust = {
+  \ 'ctagsbin' : '/home/mark/.local/bin/ctags',
+  \ 'ctagstype' : 'rust',
+  \ 'kinds' : [
+      \ 'n:modules',
+      \ 's:structures:1',
+      \ 'i:interfaces',
+      \ 'c:implementations',
+      \ 'f:functions:1',
+      \ 'g:enumerations:1',
+      \ 't:type aliases:1:0',
+      \ 'v:constants:1:0',
+      \ 'M:macros:1',
+      \ 'm:fields:1:0',
+      \ 'e:enum variants:1:0',
+      \ 'P:methods:1',
+  \ ],
+  \ 'sro': '::',
+  \ 'kind2scope' : {
+      \ 'n': 'module',
+      \ 's': 'struct',
+      \ 'i': 'interface',
+      \ 'c': 'implementation',
+      \ 'f': 'function',
+      \ 'g': 'enum',
+      \ 't': 'typedef',
+      \ 'v': 'variable',
+      \ 'M': 'macro',
+      \ 'm': 'field',
+      \ 'e': 'enumerator',
+      \ 'P': 'method',
+  \ },
+\ }
 
 " normal config stuff follows:
 
@@ -59,7 +127,50 @@ syntax enable                       " highlight syntax
 set tabpagemax=10000
 set nowrap
 set ai                              " autoindent
-set incsearch                        " highlight search results
+set incsearch                        " jump to incremental search results
+set hlsearch                        " highlight search results
+set scrolloff=1                     " always show at least one line above and below cursor
+set wrap                            " wrap long lines
+set breakindent                     " when wrapping, indent at the break
+set breakindentopt=sbr              " show the break...
+set showbreak=╰>\                   " ... with these characters
+
+" Use <C-L> to clear the highlighting of :set hlsearch.
+if maparg('<C-L>', 'n') ==# ''
+  nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+endif
+
+function! Tabline()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    let tab = i + 1
+    let winnr = tabpagewinnr(tab)
+    let buflist = tabpagebuflist(tab)
+    let bufnr = buflist[winnr - 1]
+    let bufname = bufname(bufnr)
+    let bufmodified = getbufvar(bufnr, "&mod")
+
+    let s .= '%' . tab . 'T'
+    let s .= (tab == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
+    let s .= ' '
+    let s .= (bufname != '' ? ''. fnamemodify(bufname, ':t') . ' ' : '[No Name] ')
+
+    if bufmodified
+      let s .= '[+] '
+    endif
+  endfor
+
+  let s .= '%#TabLineFill#'
+  if (exists("g:tablineclosebutton"))
+    let s .= '%=%999XX'
+  endif
+  return s
+endfunction
+set tabline=%!Tabline()
+
+if has("nvim")
+    set scrollback=100000
+endif
 
 " useful mappings for for tabs and split screens
 if has("nvim")
@@ -80,8 +191,6 @@ map <S-Right> <C-W><Right>
 map <F9> <ESC>:Tagbar<CR>
 map <C-p> <ESC>"+p
 map <C-y> "+y
-map <C-Up> 10<Up>
-map <C-Down> 10<Down>
 map <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
@@ -102,19 +211,12 @@ imap <S-Right> <ESC><C-W><Right>
 imap <F9> <ESC>:Tagbar<CR>
 imap <C-p> <ESC>"+p
 imap <C-y> "+y
-imap <C-Up> 10<Up>
-imap <C-Down> 10<Down>
 imap <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
   tnoremap <F5> <C-\><C-n>:tabe\|term<CR>
-  " tnoremap <F6> <C-\><C-n>:tabe<Space>
-  tnoremap <F6> <C-\><C-n>:Tabedit<Space>
-  tnoremap <F7> <C-\><C-n>:split<Space>
-  tnoremap <F8> <C-\><C-n>:vsplit<Space>
-  tnoremap <C-Left> <C-\><C-n>:tabp<CR>
-  tnoremap <C-Right> <C-\><C-n>:tabn<CR>
+  tnoremap <F6> <C-\><C-n>:tabe<Space>
   tnoremap <C-p> <C-\><C-n>"+p<ESC>i
   tnoremap <C-y> "+y
 endif
@@ -131,11 +233,26 @@ function! Tabedit(...)
     endif
 endfunction
 
-" arrow keys move display lines, not physical lines
-noremap  <buffer> <silent> <Up>   gk
-noremap  <buffer> <silent> <Down> gj
-inoremap <buffer> <silent> <Up>   <C-o>gk
-inoremap <buffer> <silent> <Down> <C-o>gj
+
+" Disable arrow keys
+inoremap <Up> <nop>
+inoremap <Down> <nop>
+inoremap <Left> <nop>
+inoremap <Right> <nop>
+noremap <Up> <nop>
+noremap <Down> <nop>
+noremap <Left> <nop>
+noremap <Right> <nop>
+
+" Resume where you left off
+if has("autocmd")
+    au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+endif
+
+" No line numbers in terminal
+if has("nvim")
+    au TermOpen * setlocal nonumber norelativenumber
+endif
 
 " Cite as you write
 noremap <F3> a<C-r>=ZoteroCite()<CR><ESC>
