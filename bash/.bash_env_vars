@@ -10,3 +10,8 @@ export EDITOR="vim"
 # export CUPS_SERVER=localhost:631/version=1.1
 
 export CDPATH=./:~/Documents:~/
+
+# git-prompt
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUPSTREAM="auto verbose"
