@@ -18,8 +18,8 @@ INSTALL_XMOBARRC=False
 
 # vim
 INSTALL_VIMRC=False
-INSTALL_VUNDLE=False
-INSTALL_YCM=False
+INSTALL_VIMPLUG=False
+INSTALL_COCCONFIG=False
 
 # where to install
 INSTALL_DIR=~
@@ -38,8 +38,8 @@ if [ "$INSTALL_ALL" = "True" ]; then
     INSTALL_XMONAD_CONFIG=True
     INSTALL_XMOBARRC=True
     INSTALL_VIMRC=True
-    INSTALL_VUNDLE=True
-    INSTALL_YCM=True
+    INSTALL_VIMPLUG=True
+    INSTALL_COCCONFIG=True
 fi
 
 # install bash stuff
@@ -64,8 +64,14 @@ if [ "$INSTALL_VIMRC" = "True" ]; then
     install_config_file "./vim/.vimrc"
 fi
 
-if [ "$INSTALL_VUNDLE" = "True" ]; then
-    mkdir -p $INSTALL_DIR/.vim/bundle && \
-        git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim && \
-        vim +PluginInstall +qall
+if [ "$INSTALL_VIMPLUG" = "True" ]; then
+    mkdir -p $INSTALL_DIR/.vim/autoload && \
+        curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && \
+        vim +PlugInstall +qall
+fi
+
+if [ "$INSTALL_COCCONFIG" = "True" ]; then
+    mkdir -p $INSTALL_DIR/.vim
+    cp coc-settings.json $INSTALL_DIR/.vim/
 fi

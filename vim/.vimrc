@@ -1,32 +1,16 @@
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible              " vim, no vi
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'scrooloose/nerdtree'
-
-Plugin 'rust-lang/rust.vim'
-
-Plugin 'majutsushi/tagbar'
-
-Plugin 'vim-airline/vim-airline'
-
-Plugin 'neoclide/coc.nvim' " also remember to check out release branch
-
-Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install' }
-Plugin 'junegunn/fzf.vim'
-
-Plugin 'neomake/neomake'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree'
+Plug 'rust-lang/rust.vim'
+Plug 'majutsushi/tagbar'
+Plug 'vim-airline/vim-airline'
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install' }
+Plug 'junegunn/fzf.vim'
+Plug 'neomake/neomake'
+call plug#end()
 
 " vim-airline
 set timeoutlen=50
