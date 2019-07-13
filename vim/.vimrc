@@ -200,7 +200,9 @@ imap <F10> <ESC>:NERDTreeToggle<CR>
 if has("nvim")
   tnoremap <ESC> <C-\><C-n>
   tnoremap <F5> <C-\><C-n>:tabe\|term<CR>
-  tnoremap <F6> <C-\><C-n>:tabe<Space>
+  tnoremap <F6> <C-\><C-n>:Tabedit<Space>
+  tnoremap <F7> <C-\><C-n>:split<Space>
+  tnoremap <F8> <C-\><C-n>:vsplit<Space>
   tnoremap <C-p> <C-\><C-n>"+p<ESC>i
   tnoremap <C-y> "+y
 endif
@@ -216,7 +218,6 @@ function! Tabedit(...)
         endfor
     endif
 endfunction
-
 
 " Disable arrow keys
 inoremap <Up> <nop>
