@@ -1,5 +1,5 @@
 # install stuff
-sudo apt-get install build-essential cmake python-dev vim-gnome exuberant-ctags xmonad xmobar slock trayer
+sudo apt-get install build-essential cmake python-dev vim-gnome exuberant-ctags xmonad xmobar slock trayer nodejs npm
 
 # install rust
 curl -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
