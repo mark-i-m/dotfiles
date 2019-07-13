@@ -74,4 +74,5 @@ fi
 if [ "$INSTALL_COCCONFIG" = "True" ]; then
     mkdir -p $INSTALL_DIR/.vim
     cp coc-settings.json $INSTALL_DIR/.vim/
+    cp coc-settings.json $INSTALL_DIR/.config/nvim/
 fi
