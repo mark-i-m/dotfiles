@@ -4,6 +4,7 @@ set nocompatible              " vim, no vi
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'rust-lang/rust.vim'
+Plug 'rust-analyzer/rust-analyzer', { 'do': 'cargo install-ra --server' }
 Plug 'majutsushi/tagbar'
 Plug 'vim-airline/vim-airline'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -35,9 +36,6 @@ function! s:check_back_space() abort
 endfunction
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -54,6 +52,22 @@ nmap F <Plug>(coc-rename)
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
 let g:fzf_action = { 'enter': 'tab split' }
+
+" fzf + Rg with preview window
+command! -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview('right:50%', '?'))
+
+" fzf word under cursor
+nmap <silent> S :call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(expand('<cword>')), 1,
+  \   fzf#vim#with_preview('right:50%', '?'))<CR>
+
+" fzf selected text
+vmap <silent> S "yy:call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(@y), 1,
+  \   fzf#vim#with_preview('right:50%', '?'))<CR>
 
 " rust autoformatting
 let g:rustfmt_autosave = 1
