@@ -10,7 +10,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install' }
 Plug 'junegunn/fzf.vim'
-Plug 'neomake/neomake'
 call plug#end()
 
 " vim-airline
@@ -71,9 +70,6 @@ vmap <silent> S "yy:call fzf#vim#grep(
 
 " rust autoformatting
 let g:rustfmt_autosave = 1
-
-" neomake, autorun on buffer write
-call neomake#configure#automake('rw')
 
 " use universal-ctags for Rust tagbar
 let g:rust_use_custom_ctags_defs = 1
@@ -273,7 +269,7 @@ cab lat Latex
 ab teh the
 
 " remove trailing whitespace
-command! RemoveTrailingWhitespace %s/\s\+$//
+command! RemoveTrailingWhitespace %s/\s\+$// | nohlsearch
 
 " Change colorscheme ... should always be at the end
 colorscheme desert
@@ -281,10 +277,13 @@ colorscheme desert
 set cursorline
 highlight CursorLine cterm=none ctermbg=233
 
-highlight Pmenu ctermbg=blue ctermfg=white guibg=blue guifg=white
+highlight Pmenu ctermbg=black ctermfg=white guibg=blue guifg=white
 highlight SpellBad ctermbg=red ctermfg=yellow guibg=red guifg=yellow
 highlight Search ctermbg=darkblue ctermfg=yellow cterm=bold
 highlight VertSplit ctermbg=black ctermfg=black
+
+" disable autoindent for latex
+autocmd FileType tex setlocal indentexpr=
 
 " latex compilation
 command! LatexClean execute "silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf" | redraw!
