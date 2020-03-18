@@ -18,4 +18,6 @@ function open {
 
 alias date='date +"%a %b %d %Y %I:%M.%S %p"'
 
-alias nv="nvim"
+function nv() {
+    test -n "$NVIM_LISTEN_ADDRESS" && which nvr > /dev/null && nvr -cc tabe --remote $@ || nvim $@
+}

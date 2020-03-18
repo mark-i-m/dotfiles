@@ -10,6 +10,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install' }
 Plug 'junegunn/fzf.vim'
+Plug 'mhinz/neovim-remote', { 'dir': '~/.nvr', 'do': 'pip3 install --user -e .' }
 call plug#end()
 
 " vim-airline
@@ -24,6 +25,7 @@ let g:airline#extensions#tabline#enabled = 0
 set hidden
 set updatetime=300
 set shortmess+=c
+" autocomplete
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -34,7 +36,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-nmap <silent> gd <Plug>(coc-definition)
+" show docs
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -43,8 +45,18 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
+" highlight uses on hover
 autocmd CursorHold * silent call CocActionAsync('highlight')
-nmap F <Plug>(coc-rename)
+" Go to prev diagnostic Alt-w
+nmap <silent> <M-w> <Plug>(coc-diagnostic-prev)
+" Go to prev error diagnostic Alt-w
+nmap <silent> <M-e> <Plug>(coc-diagnostic-prev-error)
+" Go to references Alt-r
+nmap <silent> <M-r> <Plug>(coc-references)
+" Go to def Alt-d
+nmap <silent> <M-d> <Plug>(coc-definition)
+" Rename with Alt-f
+nmap <silent> <M-f> <Plug>(coc-rename)
 
 
 " fzf
@@ -107,6 +119,12 @@ let g:tagbar_type_rust = {
   \ },
 \ }
 
+" nvr
+if has('nvim')
+  let $GIT_EDITOR = 'nvr -cc tabe --remote-wait'
+endif
+autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+
 " normal config stuff follows:
 
 set nu                              " number lines
@@ -128,6 +146,8 @@ set wrap                            " wrap long lines
 set breakindent                     " when wrapping, indent at the break
 set breakindentopt=sbr              " show the break...
 set showbreak=╰>\                   " ... with these characters
+set wildmode=longest:full           " tab-completion of vim commands in normal mode
+set wildmenu
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
 if maparg('<C-L>', 'n') ==# ''
@@ -208,7 +228,7 @@ imap <C-y> "+y
 imap <F10> <ESC>:NERDTreeToggle<CR>
 
 if has("nvim")
-  tnoremap <ESC> <C-\><C-n>
+  tnoremap <C-Down> <C-\><C-n>
   tnoremap <F5> <C-\><C-n>:tabe\|term<CR>
   tnoremap <F6> <C-\><C-n>:Tabedit<Space>
   tnoremap <F7> <C-\><C-n>:split<Space>
@@ -290,33 +310,49 @@ command! LatexClean execute "silent !rm -f /tmp/%:r.log /tmp/%:r.aux %:r.pdf" | 
 command! LatexDisplay execute "silent !xdg-open %:r.pdf > /dev/null 2>&1 &" | redraw!
 command! LatexBibtex execute "silent !bibtex /tmp/%:r.aux >> /tmp/%.compile.out" | redraw!
 
-function! LatexCompile()
+function! LatexCompileAsync(nobibtex)
     " If there is a makefile, do that... otherwise, do the normal thing.
     if filereadable('Makefile') || filereadable('makefile')
-        silent !make > "/tmp/%.compile.out"
-
-        if empty(glob("./*.pdf"))
-            " No PDF produced
-            echo "PDF not produced :("
-            echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+        if has("nvim")
+            call jobstart("make > /tmp/%.compile.out", {"on_exit": "LatexDoneCb"})
+        else
+            call job_start(["make"], {"out_io": "file", "out_name": "/tmp/%.compile.out", "exit_cb": "LatexDoneCb"})
         endif
     else
-        silent !pdflatex -interaction=nonstopmode -output-directory /tmp/ % > "/tmp/%.compile.out"
-
         " Also do Bibtex compile if there is a .bib file available
-        if !empty(glob("*.bib"))
-            silent !cp *.bib /tmp/ >> /tmp/%.compile.out
-            silent !cd /tmp/ && bibtex %:r.aux >> /tmp/%.compile.out
+        if empty(glob("*.bib")) || a:nobibtex
+            let cb = "LatexDoneCb"
+        else
+            let cb = "LatexBibtexCb"
         endif
 
-        if filereadable('/tmp/' . expand('%:r') . ".pdf")
-            " If PDF was generated, take it
-            silent !mv /tmp/%:r.pdf .
+        if has("nvim")
+            let cmd = "pdflatex -interaction=nonstopmode -output-directory /tmp/ "
+                \ . expand("%") . " > /tmp/" . expand("%") . ".compile.out"
+            call jobstart(cmd, {"on_exit": cb})
         else
-            " Otherwise, report error
-            echo "PDF not produced :("
-            echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+            call job_start(["pdflatex", "-interaction=nonstopmode", "-output-directory", "/tmp/", expand("%")],
+                \ {"out_io": "file", "out_name": "/tmp/". expand("%") . ".compile.out", "exit_cb": cb})
         endif
+    endif
+endfunction
+
+function! LatexBibtexCb(...)
+    silent !cp *.bib /tmp/ >> /tmp/%.compile.out
+    silent !cd /tmp/ && bibtex %:r.aux >> /tmp/%.compile.out
+    call LatexCompileAsync(1)
+endfunction
+
+function! LatexDoneCb(...)
+    if empty(glob("./*.pdf")) && !filereadable('/tmp/' . expand('%:r') . ".pdf")
+        " No PDF produced
+        echo "PDF not produced :("
+        echo "Please see /tmp/" . expand('%') . ".compile.out for errors."
+    elseif filereadable('/tmp/' . expand('%:r') . ".pdf")
+        silent !mv /tmp/%:r.pdf .
+        echom "Done compiling LaTeX."
+    else
+        echom "Done compiling LaTeX."
     endif
 endfunction
 
@@ -348,4 +384,4 @@ endfunction
 
 " Automatically compile on write
 autocmd BufReadPost *.tex call LatexClean()
-autocmd BufWritePost *.tex call LatexCompile()
+autocmd BufWritePost *.tex call LatexCompileAsync(0)

@@ -5,7 +5,12 @@ export EDITOR="vim"
 
 export CDPATH=./:~/Documents:~/
 
+export PATH=$PATH:$HOME/.cargo/bin
+
 # git-prompt
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
 export GIT_PS1_SHOWUPSTREAM="auto verbose"
+
+# prompt
+export PROMPT_COMMAND="history -a; history -c; history -r; zoxide add; $PROMPT_COMMAND"
