@@ -1,3 +1,8 @@
+
+# fzf fuzzy finding
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# environment variables
 export PYTHON_INCLUDE_DIRS=/usr/include/python2.7
 export PYTHON_LIBRARIES=/usr/lib/python2.7/config-x86_64-linux-gnu/libpython2.7.so
 
@@ -7,10 +12,6 @@ export CDPATH=./:~/Documents:~/
 
 export PATH=$PATH:$HOME/.cargo/bin
 
-# git-prompt
-export GIT_PS1_SHOWDIRTYSTATE=true
-export GIT_PS1_SHOWSTASHSTATE=true
-export GIT_PS1_SHOWUPSTREAM="auto verbose"
-
 # prompt
+eval "$(starship init bash)"
 export PROMPT_COMMAND="history -a; history -c; history -r; zoxide add; $PROMPT_COMMAND"

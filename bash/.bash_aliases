@@ -8,8 +8,6 @@ alias ....="cd ../.."
 alias .....="cd ../../.."
 alias cd..="cd .."
 
-alias cdjnk="cd /tmp/"
-
 function open {
     for file in $@ ; do
         xdg-open $file 2>&1 > /dev/null &

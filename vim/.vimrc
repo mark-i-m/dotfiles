@@ -237,6 +237,8 @@ if has("nvim")
   tnoremap <C-y> "+y
 endif
 
+nmap T <C-w>gf
+
 command! -nargs=* -complete=file Tabedit call Tabedit(<f-args>)
 
 function! Tabedit(...)

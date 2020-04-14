@@ -21,6 +21,9 @@ INSTALL_VIMRC=False
 INSTALL_VIMPLUG=False
 INSTALL_COCCONFIG=False
 
+# starship
+INSTALL_STARSHIP=False
+
 # where to install
 INSTALL_DIR=~
 
@@ -40,14 +43,15 @@ if [ "$INSTALL_ALL" = "True" ]; then
     INSTALL_VIMRC=True
     INSTALL_VIMPLUG=True
     INSTALL_COCCONFIG=True
+    INSTALL_STARSHIP=True
 fi
 
 # install bash stuff
 if [ "$INSTALL_BASHRC" = "True" ]; then
-    install_config_file "./bash/.bashrc"
-    install_config_file "./bash/.git_prompt.sh"
-    install_config_file "./bash/.bash_env_vars"
+    install_config_file "./bash/.bash_extra"
     install_config_file "./bash/.bash_aliases"
+
+    echo -e '\n. $HOME/.bash_extra' >> $HOME/.bashrc
 fi
 
 # install xmonad stuff
@@ -75,4 +79,9 @@ if [ "$INSTALL_COCCONFIG" = "True" ]; then
     mkdir -p $INSTALL_DIR/.vim
     cp coc-settings.json $INSTALL_DIR/.vim/
     cp coc-settings.json $INSTALL_DIR/.config/nvim/
+fi
+
+if [ "$INSTALL_STARSHIP" = "True" ]; then
+    mkdir -p $INSTALL_DIR/.config
+    cp ./bash/starship.toml $INSTALL_DIR/.config/
 fi

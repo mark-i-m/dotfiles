@@ -48,7 +48,9 @@ myKeys conf@(XConfig {modMask = modm}) = fromList $
         ])
     , ((modm, xK_c), namedScratchpadAction myScratchpads "term")
     , ((0   , 0x1008FF11), spawn "amixer set Master 2-")
+    , ((modm, xK_d      ), spawn "amixer set Master 2-")
     , ((0   , 0x1008FF13), spawn "amixer set Master 2+")
+    , ((modm, xK_u      ), spawn "amixer set Master 2+")
     , ((0   , 0x1008FF12), spawn "bash ~/.xmonad/volume_mute_toggle.sh")
     , ((0   , 0x1008FFA9), spawn "touchpad-toggle")
     , ((0   , 0x1008FF02), spawn "xbacklight +10")
@@ -157,7 +159,7 @@ myConfig logHandle = defaultConfig {
     startupHook = myStartupHook,
 
     -- terminal
-    terminal = "/usr/bin/gnome-terminal",
+    terminal = "/usr/bin/konsole",
 
     -- workspace names
     workspaces  = myWorkspaces,

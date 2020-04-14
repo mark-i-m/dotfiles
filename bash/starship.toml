@@ -1,0 +1,58 @@
+
+# define order of elements in prompt
+prompt_order = [
+    "cmd_duration",
+    "username",
+    "hostname",
+    "directory",
+    "git_branch",
+    "git_commit",
+    "git_state",
+    "git_status",
+    "golang",
+    "custom",
+    "line_break",
+    "jobs",
+    "battery",
+    "time",
+    "character",
+]
+
+[username]
+show_always = true
+style_root = "bold red"
+style_user = "bold red"
+suffix = ""
+
+[hostname]
+prefix = ""
+ssh_only = false
+style = "bold red"
+
+[directory]
+truncation_length = 8
+prefix = ""
+style = "bold green"
+truncate_to_repo = false
+
+[git_branch]
+style = "bold yellow"
+
+[git_status]
+show_sync_count = true
+modified = "*"
+untracked = ""
+style = "bold yellow"
+
+[package]
+disabled = true
+
+# display battery level if <= 20%
+[[battery.display]]
+threshold = 20
+style = "bold red"
+
+[time]
+
+[character]
+
